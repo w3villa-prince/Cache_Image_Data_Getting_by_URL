@@ -10,48 +10,45 @@ using System;
 public class GetImageByURL : MonoBehaviour
 {
 
-    // public static GetImageByURL localDic;
-   // bool IsInitialized = false;//{ get; private set; }
-    
+
 
     Texture2D tempTexture;
     [SerializeField] RawImage sprite;
     float _maxCacheTimeLimit = 1;
     bool _isLoaddata;
-    public static Dictionary<string, DateTime> _imageDic= new Dictionary<string, DateTime>();
+    public static Dictionary<string, DateTime> _imageDic = new Dictionary<string, DateTime>();
     void Start()
     {
         Initialize();
 
 
-    } 
+    }
     void Update()
     {
-        if(_isLoaddata && tempTexture==null )
+        if (_isLoaddata && tempTexture == null)
         {
-            Debug.Log( (_imageDic));
 
-          GettingTextureByURL("http://graph.facebook.com/10150001787221949/picture?type=normal", ImageRespectWith.Player);
+            GettingTextureByURL("http://graph.facebook.com/10150001787221949/picture?type=normal", ImageRespectWith.Player);
         }
 
     }
 
-    private  void Initialize()
-    { 
+    private void Initialize()
+    {
         _isLoaddata = true;
 
 
         SetLocalDataLoading();
-        
-        
+
+
 
     }
-   static void SetLocalDataLoading()
+    static void SetLocalDataLoading()
     {
-        string localdata = PlayerPrefs.GetString("LocalDic",null);
+        string localdata = PlayerPrefs.GetString("LocalDic", null);
         _imageDic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, DateTime>>(localdata);
-        Debug.Log(_imageDic +"Load Data Sucees");
-         
+        Debug.Log(_imageDic + "Load Data Sucees");
+
 
 
 
@@ -62,7 +59,7 @@ public class GetImageByURL : MonoBehaviour
         PlayerPrefs.SetString("LocalDic", value);
     }
 
-     void GettingTextureByURL(string url, ImageRespectWith imageRespectWith)
+    void GettingTextureByURL(string url, ImageRespectWith imageRespectWith)
     {
         Debug.Log("PAth Setup");
         string fileName = TextToHex(url);
@@ -93,47 +90,38 @@ public class GetImageByURL : MonoBehaviour
 
     public void LoadTextureFromFileOrDownload(string url, string filePath)
     {
-        Debug.Log("file Local Check");
 
-            string fileName = TextToHex(url);
-        
+        string fileName = TextToHex(url);
 
-        if (File.Exists(filePath)&&_isLoaddata)
+
+        if (File.Exists(filePath) && _isLoaddata)
         {
-            Debug.Log("local file getting "+ _imageDic[fileName]);
-            //StartCoroutine(LoadTextureFromSave(filePath));
+            //Debug.Log("local file getting "+ _imageDic[fileName]); 
             if (DateTime.Now <= _imageDic[fileName])
             {
                 StartCoroutine(LoadTextureFromSave(filePath));
-                Debug.Log("Old data getting "+ _imageDic[fileName]+ "\n"+DateTime.Now);
+                //Debug.Log("Old data getting "+ _imageDic[fileName]+ "\n"+DateTime.Now);
 
             }
             else
             {
                 StartCoroutine(LoadTextureFromURI(url, filePath));
-                          DateTime _UpadateCurrentTime = DateTime.Now;
-                       
-                         _imageDic[fileName] = _UpadateCurrentTime.AddMinutes(_maxCacheTimeLimit);
-                Debug.Log(" update Old data getting " +_UpadateCurrentTime +"\n"+ DateTime.Now);
+                DateTime _UpadateCurrentTime = DateTime.Now;
+                _imageDic[fileName] = _UpadateCurrentTime.AddMinutes(_maxCacheTimeLimit);
+                //Debug.Log(" update Old data getting " +_UpadateCurrentTime +"\n"+ DateTime.Now);
 
             }
-          
-             
+
+
 
         }
         else
         {
             DateTime _dateTime = DateTime.Now;
             _dateTime.AddMinutes(_maxCacheTimeLimit);
-            //if (_imageDic.ContainsKey(fileName))
-            //{
-            //    _imageDic[fileName] = _dateTime;
-            //}
-            //else
             _imageDic.Clear();
             _imageDic.Add(fileName, _dateTime);
- 
-            Debug.Log("Store Value"+ _imageDic[fileName] +fileName);
+            //Debug.Log("Store Value"+ _imageDic[fileName] +fileName);
             StartCoroutine(LoadTextureFromURI(url, filePath));
         }
 
@@ -180,11 +168,8 @@ public class GetImageByURL : MonoBehaviour
 
     IEnumerator LoadTextureFromSave(string filePath)
     {
-        Debug.Log("Load texture by path "+filePath);
         byte[] bytes = File.ReadAllBytes(filePath);
-        Debug.Log("BYTESdata  " + bytes);
         Texture2D loadTexture = new Texture2D(1, 1);
-        Debug.Log("texture   " + loadTexture);
         try
         {
             loadTexture.LoadImage(bytes);
@@ -194,8 +179,9 @@ public class GetImageByURL : MonoBehaviour
             Debug.Log("Loaded from file");
             Debug.Log(filePath);
         }
-        catch(System.Exception e) {
-            Debug.Log("Catch call" +e) ; 
+        catch (System.Exception e)
+        {
+            Debug.Log("Catch call" + e);
         }
         yield return null;
     }
