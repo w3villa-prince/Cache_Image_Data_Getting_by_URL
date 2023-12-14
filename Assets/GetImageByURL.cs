@@ -43,7 +43,7 @@ public class GetImageByURL : MonoBehaviour
 
 
     }
-    static void SetLocalDataLoading()
+    private void SetLocalDataLoading()
     {
         string localdata = PlayerPrefs.GetString("LocalDic", null);
         _imageDic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, DateTime>>(localdata);
@@ -53,15 +53,15 @@ public class GetImageByURL : MonoBehaviour
 
 
     }
-    void SaveLocalDic()
+    private void SaveLocalDic()
     {
         string value = Newtonsoft.Json.JsonConvert.SerializeObject(_imageDic);
         PlayerPrefs.SetString("LocalDic", value);
     }
 
-    void GettingTextureByURL(string url, ImageRespectWith imageRespectWith)
+    private void GettingTextureByURL(string url, ImageRespectWith imageRespectWith)
     {
-        Debug.Log("PAth Setup");
+        //Debug.Log("PAth Setup");
         string fileName = TextToHex(url);
         if (!Directory.Exists(Application.persistentDataPath + "/Player/"))
         {
@@ -185,12 +185,6 @@ public class GetImageByURL : MonoBehaviour
         }
         yield return null;
     }
-    public enum ImageRespectWith
-    {
-        None,
-        Player,
-        Game
-    }
     public void DeleteAssets(ImageRespectWith imageRespectWith)
     {
         string path = Application.persistentDataPath + "/";
@@ -210,4 +204,43 @@ public class GetImageByURL : MonoBehaviour
         FileUtil.DeleteFileOrDirectory(path);
     }
 
+    public void CleanUnUseFile()
+    {
+        if (_imageDic != null)
+        {
+            foreach (KeyValuePair<string, DateTime> Imagedata in _imageDic)
+            {
+                if (DateTime.Now >= _imageDic[Imagedata.Key])
+                {
+                    string _playerDataPath = Application.persistentDataPath + "/player/" + Imagedata.Key;
+                    string _gameDataPath = Application.persistentDataPath + "/game/" + Imagedata.Key;
+
+                    if (File.Exists(_playerDataPath))
+                    {
+
+                        Debug.Log($"Clear File Data {_playerDataPath} ");
+                        // File.Delete(path);
+                        FileUtil.DeleteFileOrDirectory(_playerDataPath);
+                    }
+                    else if (File.Exists(_gameDataPath))
+                    {
+
+                        Debug.Log($"Clear File Data {_gameDataPath} ");
+                        // File.Delete(path);
+                        FileUtil.DeleteFileOrDirectory(_gameDataPath);
+                    }
+
+
+                }
+
+            }
+        }
+    }
+
+    public enum ImageRespectWith
+    {
+        None,
+        Player,
+        Game
+    }
 }
