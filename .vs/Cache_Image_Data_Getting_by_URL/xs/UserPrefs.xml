@@ -1,0 +1,15 @@
+﻿<Properties StartupConfiguration="{62105B50-80E6-D4B3-193F-2B7F1A1838ED}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GetImageByURL.cs">
+    <Files>
+      <File FileName="Assets/GetImageByURL.cs" Line="99" Column="9" />
+      <File FileName="Library/PackageCache/com.unity.collab-proxy@1.17.2/Editor/PlasticSCM/PlasticWindow.cs" Line="1014" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="125f272c-331a-46fe-8b18-7af7a3f4f5d9" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
